@@ -1,0 +1,25 @@
+<table class="min-w-full divide-y divide-gray-200 text-sm">
+  <thead class="bg-gray-100">
+    <tr>
+      <th class="px-4 py-2 text-left font-medium text-gray-600">Machine Name</th>
+      <th class="px-4 py-2 text-left font-medium text-gray-600">Location</th>
+      <th class="px-4 py-2 text-right font-medium text-gray-600">Forecast</th>
+      <th class="px-4 py-2 text-right font-medium text-gray-600">Actual</th>
+      <th class="px-4 py-2 text-right font-medium text-gray-600">Diff</th>
+    </tr>
+  </thead>
+  <tbody class="divide-y divide-gray-100">
+    <tr *ngFor="let m of machines" class="hover:bg-gray-50">
+      <td class="px-4 py-2">{{ m.machine_name }}</td>
+      <td class="px-4 py-2">{{ m.location }}</td>
+      <td class="px-4 py-2 text-right">{{ m.forecast_amount | number }}</td>
+      <td class="px-4 py-2 text-right">{{ m.actual_amount | number }}</td>
+      <td
+        class="px-4 py-2 text-right font-medium"
+        [ngClass]="m.diff >= 0 ? 'text-green-600' : 'text-red-600'"
+      >
+        {{ m.diff >= 0 ? '+' : '' }}{{ m.diff | number }}
+      </td>
+    </tr>
+  </tbody>
+</table>
