@@ -1,0 +1,106 @@
+<div class="space-y-6">
+  <h2 class="text-xl font-semibold">
+    {{ isEditing ? 'Edit Simulation Setting' : 'Create Simulation Setting' }}
+  </h2>
+
+  <!-- Basic Fields -->
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <label class="text-sm font-medium">Model ID</label>
+      <input class="w-full p-2 border rounded"
+             [(ngModel)]="formData.modelId" />
+    </div>
+
+    <div>
+      <label class="text-sm font-medium">Max Holding Amount</label>
+      <input type="number"
+             class="w-full p-2 border rounded"
+             [(ngModel)]="formData.maxHoldingAmount" />
+    </div>
+
+    <div>
+      <label class="text-sm font-medium">Interest Rate (%)</label>
+      <input type="number"
+             class="w-full p-2 border rounded"
+             [(ngModel)]="formData.interestRate" />
+    </div>
+
+    <div>
+      <label class="text-sm font-medium">Safety Stock</label>
+      <input type="number"
+             class="w-full p-2 border rounded"
+             [(ngModel)]="formData.safetyStock" />
+    </div>
+
+    <div>
+      <label class="text-sm font-medium">Pre-withdrawal (%)</label>
+      <input type="number"
+             class="w-full p-2 border rounded"
+             [(ngModel)]="formData.preWithdrawalPct" />
+    </div>
+  </div>
+
+  <!-- Service Mode -->
+  <div>
+    <label class="text-sm font-medium">Service Mode</label>
+    <select class="w-full p-2 border rounded"
+            [(ngModel)]="formData.serviceMode">
+      <option value="ADD">ADD</option>
+      <option value="REPLACE">REPLACE</option>
+      <option value="ADD_REPLACE">ADD + REPLACE</option>
+    </select>
+  </div>
+
+  <!-- Days Selection -->
+  <div class="grid grid-cols-2 gap-6">
+    <div>
+      <h3 class="text-md font-semibold mb-2">ADD Days</h3>
+      <div class="space-y-1">
+        <label *ngFor="let d of DAYS" class="flex items-center gap-2">
+          <input type="checkbox"
+                 (change)="toggleDay('addDays', d)"
+                 [checked]="formData.addDays.includes(d)" />
+          {{ d }}
+        </label>
+      </div>
+    </div>
+
+    <div>
+      <h3 class="text-md font-semibold mb-2">Replace Days</h3>
+      <div class="space-y-1">
+        <label *ngFor="let d of DAYS" class="flex items-center gap-2">
+          <input type="checkbox"
+                 (change)="toggleDay('replaceDays', d)"
+                 [checked]="formData.replaceDays.includes(d)" />
+          {{ d }}
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cycles -->
+  <div>
+    <h3 class="text-md font-semibold mb-3">ADD Cycles</h3>
+    <div class="grid grid-cols-2 gap-2">
+      <label *ngFor="let c of CYCLES" class="flex items-center gap-2">
+        <input type="checkbox"
+               (change)="toggleCycle('addCycles', c)"
+               [checked]="formData.addCycles.includes(c)" />
+        {{ c }}
+      </label>
+    </div>
+  </div>
+
+  <!-- Save / Cancel Buttons -->
+  <div class="flex justify-end gap-4 mt-4">
+    <button class="px-4 py-2 border rounded"
+            (click)="onCancel.emit()">
+      Cancel
+    </button>
+
+    <button class="px-4 py-2 text-white bg-blue-600 rounded"
+            (click)="save()">
+      {{ isEditing ? 'Update' : 'Save' }}
+    </button>
+  </div>
+</div>

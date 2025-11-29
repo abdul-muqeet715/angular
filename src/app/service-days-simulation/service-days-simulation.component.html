@@ -1,0 +1,126 @@
+<div class="min-h-screen p-6 bg-gray-100">
+  <div class="max-w-6xl mx-auto">
+    <!-- Header -->
+    <div class="flex items-center gap-3 mb-6">
+      <h1 class="text-2xl font-bold">Service Days Simulation</h1>
+      <span class="px-3 py-1 text-sm text-white bg-blue-600 rounded-full">
+        Experimental
+      </span>
+    </div>
+
+    <!-- Tabs -->
+    <div class="flex mb-6 space-x-4 border-b">
+      <button class="px-4 py-2 -mb-px border-b-2"
+              [ngClass]="{
+                'border-blue-600 text-blue-600 font-semibold': activeTab === 'settings',
+                'border-transparent text-gray-600': activeTab !== 'settings'
+              }"
+              (click)="activeTab = 'settings'">
+        Simulation Settings
+      </button>
+
+      <button class="px-4 py-2 -mb-px border-b-2"
+              [ngClass]="{
+                'border-blue-600 text-blue-600 font-semibold': activeTab === 'results',
+                'border-transparent text-gray-600': activeTab !== 'results'
+              }"
+              (click)="activeTab = 'results'">
+        Simulation Results
+      </button>
+    </div>
+
+    <!-- Content -->
+    <div>
+      <!-- SETTINGS TAB -->
+      <ng-container *ngIf="activeTab === 'settings'">
+
+        <!-- Add New Button -->
+        <div class="flex justify-end mb-4">
+          <button class="px-4 py-2 text-white bg-blue-600 rounded-lg"
+                  (click)="showForm = true; editingSetting = undefined">
+            + Add Simulation Setting
+          </button>
+        </div>
+
+        <!-- Settings List -->
+        <div class="space-y-4">
+          <div *ngFor="let s of settings"
+               class="p-4 bg-white border rounded-lg shadow">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-lg font-semibold">{{ s.modelId }}</h3>
+                <p class="text-sm text-gray-600">
+                  Max Holding: {{ s.maxHoldingAmount }} |
+                  Safety Stock: {{ s.safetyStock }} |
+                  Mode: {{ s.serviceMode }}
+                </p>
+              </div>
+
+              <div class="flex gap-3">
+                <button class="px-3 py-1 text-blue-600 border rounded"
+                        (click)="handleEditSetting(s)">
+                  Edit
+                </button>
+
+                <button class="px-3 py-1 text-red-600 border border-red-400 rounded"
+                        (click)="handleDeleteSetting(s.id)">
+                  Delete
+                </button>
+
+                <button class="px-3 py-1 text-green-600 border border-green-400 rounded"
+                        (click)="selectedSettingId = s.id">
+                  Select
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Popup -->
+        <div *ngIf="showForm" class="fixed inset-0 bg-black/40 flex justify-center items-center">
+          <div class="bg-white p-6 rounded-lg w-[700px] shadow-xl">
+            <app-simulation-settings-form
+              [setting]="editingSetting"
+              [isEditing]="editingSetting !== undefined"
+              (onSave)="handleSaveSetting($event)"
+              (onCancel)="showForm = false">
+            </app-simulation-settings-form>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- RESULTS TAB -->
+      <ng-container *ngIf="activeTab === 'results'">
+        <app-simulation-results [results]="simulationResults"></app-simulation-results>
+      </ng-container>
+    </div>
+
+    <!-- CASHPOINT SELECTION + RUN BUTTON -->
+    <div class="mt-10 p-6 bg-white rounded-xl shadow">
+      <h2 class="text-xl font-semibold mb-4">Select Cashpoints</h2>
+
+      <button class="px-3 py-1 mb-3 text-sm bg-gray-200 rounded"
+              (click)="toggleAllCashpoints()">
+        {{ selectedCashpoints.length === mockCashpoints.length ? 'Unselect All' : 'Select All' }}
+      </button>
+
+      <div class="grid grid-cols-2 gap-4 mt-4">
+        <label *ngFor="let cp of mockCashpoints"
+               class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer bg-gray-50">
+          <input type="checkbox"
+                 [checked]="selectedCashpoints.includes(cp.id)"
+                 (change)="toggleCashpoint(cp.id)" />
+          <div>
+            <p class="font-medium">{{ cp.name }}</p>
+            <p class="text-sm text-gray-600">{{ cp.location }}</p>
+          </div>
+        </label>
+      </div>
+
+      <button class="w-full mt-6 px-4 py-2 text-white bg-green-600 rounded-lg"
+              (click)="runSimulation()">
+        Run Simulation
+      </button>
+    </div>
+  </div>
+</div>
